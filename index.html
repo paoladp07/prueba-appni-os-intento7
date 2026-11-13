@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cuentos para leer y jugar</title>
+<style>
+:root{--bg:#FFF7E8;--card:#FFFFFF;--tx:#3B2F4F;--mut:#6E6283;--ac:#7656B5;--onac:#FFFFFF;--coral:#FF987F;--mint:#BFE8D5;--ok:#1F6F50;--okbg:#DDF5EA;--no:#FFE9DF;--bd:#E8DCC8;--star:#F2A93B;--fs:26px;--ls:.02em;--lh:1.6;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#2B2440;--card:#3A3157;--tx:#F4EEFF;--mut:#BDB1D6;--ac:#B79CF0;--onac:#231A38;--ok:#8FE0BC;--okbg:#27493F;--no:#4A3A3A;--bd:#54497A}}
+:root[data-theme="dark"]{--bg:#2B2440;--card:#3A3157;--tx:#F4EEFF;--mut:#BDB1D6;--ac:#B79CF0;--onac:#231A38;--ok:#8FE0BC;--okbg:#27493F;--no:#4A3A3A;--bd:#54497A}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+body{margin:0;height:100%;background:var(--bg);color:var(--tx);font-family:'Trebuchet MS','Lucida Grande','Segoe UI',system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+#app{max-width:520px;margin:0 auto;min-height:100%;padding:14px 16px 28px;display:flex;flex-direction:column;gap:14px;box-sizing:border-box}
+h1{font-size:28px;line-height:1.25;margin:4px 0 0;font-weight:700;text-align:center}
+p{margin:0}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.btn{font:inherit;font-size:20px;font-weight:700;min-height:58px;padding:12px 22px;border-radius:24px;border:3px solid #CDBFEA;background:var(--card);color:var(--tx);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:10px}
+.btn.main{background:var(--ac);border-color:var(--ac);color:var(--onac)}
+.btn.sq{min-width:58px;padding:12px}
+.btn:disabled{opacity:.45;cursor:default}
+.btn:focus-visible,.chip:focus-visible{outline:4px solid var(--tx);outline-offset:3px}
+.story{width:100%;text-align:left;font:inherit;display:flex;align-items:center;gap:14px;background:var(--card);color:var(--tx);border:3px solid var(--mint);border-radius:26px;padding:12px;cursor:pointer}
+.story .th{width:42%;flex:none;border-radius:16px;overflow:hidden}
+.story b{font-size:22px;display:block;margin-bottom:6px}
+.story span{color:var(--mut);font-size:16px}
+.panel{background:var(--card);border:3px solid var(--bd);border-radius:24px;padding:16px;display:flex;flex-direction:column;gap:14px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:19px}
+.chip{font:inherit;font-size:18px;min-height:48px;padding:8px 18px;border-radius:999px;border:3px solid #CDBFEA;background:var(--card);color:var(--tx);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ac);border-color:var(--ac);color:var(--onac)}
+.bar{height:14px;border-radius:99px;background:var(--bd);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--coral);border-radius:99px}
+.pic{border-radius:28px;overflow:hidden;border:4px solid var(--mint);background:#F1DDB0}.cap{padding:0 12px 14px;display:flex;flex-direction:column;align-items:center;gap:10px}.cap .paper{background:#FFF7E8;color:#3B2F4F;border-radius:22px;padding:16px;width:100%;box-sizing:border-box;text-align:center}.cap .btn{background:#FFF7E8;color:#3B2F4F;border-color:#CDBFEA;min-height:50px;font-size:18px}.paper .slot{color:#7656B5}.paper .slot.ok{color:#1F6F50;background:#DDF5EA}
+.page{background:var(--card);border:3px solid var(--bd);border-radius:28px;padding:20px;display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center}
+.txt{font-size:var(--fs);line-height:var(--lh);letter-spacing:var(--ls);word-spacing:.12em;display:flex;flex-direction:column;gap:10px}
+.nav{display:flex;gap:12px}
+.nav .btn{flex:1}
+.slot{display:inline-block;min-width:3.2em;border-bottom:4px solid var(--coral);padding:0 .25em;margin:0 .1em;color:var(--ac)}
+.slot.ok{color:var(--ok);border-color:var(--ok);background:var(--okbg);border-radius:12px}
+.opts{display:flex;flex-direction:column;gap:12px}
+.opts .btn{font-size:26px;min-height:68px}
+.opts .btn.ok{background:var(--okbg);border-color:var(--ok);color:var(--ok)}
+.opts .btn.no{background:var(--no);border-color:var(--bd);color:var(--mut)}
+.msg{font-size:21px;line-height:1.45;text-align:center;font-weight:700;border-radius:22px;padding:14px 16px}
+.msg.good{background:var(--okbg);color:var(--ok);font-size:26px}
+.msg.soft{background:var(--no);color:var(--tx);font-weight:400}
+.stars{font-size:44px;letter-spacing:.15em}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style></head>
+<body><div id="app"></div>
+<script>
+const S='stroke="#7a5646" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"';
+const tr=(x,y,s,f)=>`transform="translate(${x},${y}) scale(${(f||1)*s},${s})"`;
+const tree0=(x,y,s)=>`<g ${tr(x,y,s)} ${S}><rect x="-6" y="-42" width="12" height="42" rx="4" fill="#B98A68"/><circle cx="-18" cy="-44" r="18" fill="#9BD08C"/><circle cx="18" cy="-46" r="18" fill="#9BD08C"/><circle cy="-62" r="28" fill="#86BF7A"/></g>`;
+const pig0=(x,y,s,f,m)=>`<g ${tr(x,y,s,f)} ${S}><rect x="-16" y="-20" width="10" height="20" rx="4" fill="#F0A194"/><rect x="8" y="-20" width="10" height="20" rx="4" fill="#F0A194"/><path d="M-28-40q-12-4-6-14" fill="none"/><ellipse cy="-38" rx="29" ry="24" fill="#F8BDB0"/><ellipse cx="16" cy="-68" rx="6" ry="9" fill="#F0A194" transform="rotate(-20 16 -68)"/><ellipse cx="33" cy="-68" rx="6" ry="9" fill="#F0A194" transform="rotate(20 33 -68)"/><circle cx="25" cy="-52" r="19" fill="#F8BDB0"/><ellipse cx="37" cy="-47" rx="9" ry="7" fill="#F4A092"/><circle cx="34" cy="-47" r="1.4" fill="#7a5646"/><circle cx="40" cy="-47" r="1.4" fill="#7a5646"/><circle cx="27" cy="-57" r="2.4" fill="#3b2a2a" stroke="none"/><circle cx="19" cy="-46" r="4" fill="#F28B82" stroke="none" opacity=".6"/><path d="M28-40q5 4 10 0" fill="none"/>${m?'<path d="M-4-62L-30-90" fill="none" stroke-width="3"/><circle cx="-33" cy="-93" r="10" fill="#DCE9F7"/>':''}</g>`;
+const wolf0=(x,y,s,f,o)=>`<g ${tr(x,y,s,f)} ${S}><path d="M-26-40Q-50-40-44-18" fill="none" stroke-width="7" stroke="#8C95A8"/><rect x="-14" y="-24" width="10" height="24" rx="4" fill="#8C95A8"/><rect x="6" y="-24" width="10" height="24" rx="4" fill="#8C95A8"/><ellipse cy="-46" rx="26" ry="32" fill="#A3ACBD"/><path d="M-2-98L2-122L16-104ZM18-104L32-120L34-96Z" fill="#8C95A8"/><circle cx="12" cy="-88" r="20" fill="#A3ACBD"/><ellipse cx="30" cy="-82" rx="14" ry="9" fill="#C3CAD8"/><circle cx="41" cy="-85" r="4" fill="#4a3a4a" stroke="none"/>${o?'<ellipse cx="33" cy="-76" rx="6" ry="5" fill="#7a4a5a"/>':''}<circle cx="14" cy="-92" r="2.5" fill="#3b2a2a" stroke="none"/><path d="M8-99l12 4" fill="none"/></g>`;
+const hare0=(x,y,s,f,z)=>`<g ${tr(x,y,s,f)} ${S}><ellipse cx="-4" cy="-26" rx="30" ry="20" fill="#F4E9DC"/><circle cx="-34" cy="-30" r="9" fill="#fff"/><ellipse cx="14" cy="-66" rx="6" ry="18" fill="#F4E9DC" transform="rotate(-8 14 -66)"/><ellipse cx="28" cy="-66" rx="6" ry="18" fill="#F4E9DC" transform="rotate(10 28 -66)"/><circle cx="26" cy="-40" r="16" fill="#F4E9DC"/><ellipse cx="10" cy="-4" rx="14" ry="6" fill="#F4E9DC"/><ellipse cx="-16" cy="-4" rx="12" ry="6" fill="#F4E9DC"/><circle cx="39" cy="-38" r="3" fill="#F2A3A3" stroke="none"/>${z?'<path d="M26-44q4 3 8 0" fill="none"/><text x="46" y="-62" font-size="16" fill="#7656B5" stroke="none">z z</text>':'<circle cx="31" cy="-44" r="2.4" fill="#3b2a2a" stroke="none"/>'}<circle cx="22" cy="-33" r="4" fill="#F7B9B0" stroke="none" opacity=".6"/></g>`;
+const tort0=(x,y,s,f)=>`<g ${tr(x,y,s,f)} ${S}><rect x="-22" y="-12" width="12" height="12" rx="4" fill="#A8D8B0"/><rect x="10" y="-12" width="12" height="12" rx="4" fill="#A8D8B0"/><circle cx="34" cy="-22" r="11" fill="#A8D8B0"/><path d="M-32-8a32 30 0 0 1 64 0z" fill="#6FBF98"/><path d="M-14-8l4-18h12l4 18" fill="none" stroke-width="1.6"/><circle cx="38" cy="-25" r="2" fill="#3b2a2a" stroke="none"/><path d="M36-17q4 3 8 0" fill="none" stroke-width="1.6"/></g>`;
+const hs0=(x,y,s,t)=>{const w=['#F4DE8E','#C99D70','#E79985'][t],r=['#E0B955','#9A6B49','#8F7AC6'][t];return `<g ${tr(x,y,s)} ${S}><rect x="-38" y="-58" width="76" height="58" rx="4" fill="${w}"/>${t==2?'<path d="M-38-44H38M-38-30H38M-38-16H38M-12-58v14M14-44v14M-12-30v14M14-16v16" stroke="#C97362" fill="none"/>':t==1?'<path d="M-24-58v58M-10-58v58M4-58v58M18-58v58M30-58v58" stroke="#8A5E3F" stroke-width="3"/>':'<path d="M-30-50l8 10M-10-52l6 12M12-50l8 10M28-40l-6 10M-24-20l8 10M6-24l8 10" stroke="#C79B3C"/>'}<path d="M-46-56L0-96L46-56Z" fill="${r}"/><path d="M-9 0v-26a9 9 0 0 1 18 0v26z" fill="#B9825F"/><rect x="16" y="-44" width="16" height="16" rx="3" fill="#CFE9F5"/></g>`};
+const wind=(x,y)=>`<g transform="translate(${x},${y})" stroke="#8FB7DC" stroke-width="4" fill="none" stroke-linecap="round"><path d="M0 0q20-8 40 0t40 0"/><path d="M6 15q20-8 40 0t40 0"/><path d="M0-15q20-8 40 0t36 0"/></g>`;
+const pile=(x,y,c)=>`<g transform="translate(${x},${y})" ${S}><path d="M-34 0Q-20-24 0-14Q22-28 36 0Z" fill="${c}"/><path d="M-22-8l16-6M4-12l18 4M-8-16l6 10" fill="none"/></g>`;
+const flag=(x,y,s)=>`<g ${tr(x,y,s)} ${S}><path d="M0 0V-70" fill="none" stroke-width="4"/><path d="M2-70L38-58L2-46Z" fill="#FF987F"/></g>`;
+const conf=()=>[[50,40,'#FF987F'],[120,25,'#BFE8D5'],[200,50,'#7656B5'],[270,22,'#FF987F'],[350,60,'#BFE8D5']].map(c=>`<circle cx="${c[0]}" cy="${c[1]}" r="6" fill="${c[2]}"/>`).join('');
+const sh=(x,y,w)=>`<ellipse cx="${x}" cy="${y+2}" rx="${w}" ry="${w/6}" fill="#4F7A45" opacity=".22"/>`;
+const OV=['#8FB8E8','#F2D36B','#B7A2E8'];
+const FL=[[30,190,'#FF987F'],[70,200,'#fff'],[140,184,'#F6D26B'],[210,196,'#FF987F'],[250,182,'#fff'],[330,186,'#F6D26B'],[385,200,'#FF987F']].map(c=>`<g transform="translate(${c[0]},${c[1]})"><path d="M0 0v8" stroke="#6FA85F" stroke-width="1.5"/><circle r="4" fill="${c[2]}"/><circle r="1.6" fill="#FFE9A0"/></g>`).join('');
+const FG='<g stroke="#6FA85F" stroke-width="3" stroke-linecap="round" fill="none"><path d="M8 238q2-16 8-22M16 238q0-12 6-20M24 238q-2-10-8-16M376 238q-2-16-8-22M386 238q0-12-6-20M394 238q2-10 8-16"/></g>';
+const tree=(x,y,s)=>sh(x,y,34*s)+tree0(x,y,s)+`<g ${tr(x,y,s)}><circle cx="-8" cy="-70" r="9" fill="#B5E0A3" opacity=".7"/><circle cx="14" cy="-58" r="6" fill="#B5E0A3" opacity=".6"/><circle cx="-14" cy="-52" r="3.5" fill="#FF987F"/><circle cx="10" cy="-72" r="3.5" fill="#FF987F"/><circle cx="22" cy="-44" r="3.5" fill="#FF987F"/></g>`;
+const pig=(x,y,s,f,m)=>sh(x,y,36*s)+pig0(x,y,s,f,m)+`<g ${tr(x,y,s,f)} ${S}><rect x="-24" y="-34" width="48" height="19" rx="9" fill="${OV[Math.floor(x/60)%3]}"/><rect x="-14" y="-52" width="18" height="22" rx="6" fill="${OV[Math.floor(x/60)%3]}"/><path d="M-10-52l-2-8M0-52l2-8" fill="none"/><circle cx="-9" cy="-45" r="2" fill="#FF987F" stroke="none"/><circle cx="-1" cy="-45" r="2" fill="#FF987F" stroke="none"/><ellipse cx="18" cy="-62" rx="5" ry="3" fill="#fff" stroke="none" opacity=".5"/></g>`;
+const wolf=(x,y,s,f,o)=>sh(x,y,40*s)+wolf0(x,y,s,f,o)+`<g ${tr(x,y,s,f)} ${S}><ellipse cx="2" cy="-38" rx="15" ry="21" fill="#DDE2EC" stroke="none"/><path d="M-6-26l4 6M4-24l4 6M-12-34l5 4" fill="none" stroke="#9AA3B5"/><circle cx="22" cy="-80" r="5" fill="#E9A6A6" stroke="none" opacity=".55"/></g>`;
+const hare=(x,y,s,f,z)=>sh(x,y,38*s)+hare0(x,y,s,f,z)+`<g ${tr(x,y,s,f)} ${S}><ellipse cx="14" cy="-66" rx="2.6" ry="12" fill="#F7B9B0" stroke="none" transform="rotate(-8 14 -66)"/><ellipse cx="28" cy="-66" rx="2.6" ry="12" fill="#F7B9B0" stroke="none" transform="rotate(10 28 -66)"/><path d="M13-48q14-9 28-3" fill="none" stroke="#FF987F" stroke-width="4"/><path d="M40-36l12-2M40-34l11 4" fill="none" stroke-width="1.2"/></g>`;
+const tort=(x,y,s,f)=>sh(x,y,36*s)+tort0(x,y,s,f)+`<g ${tr(x,y,s,f)} ${S}><ellipse cx="-12" cy="-22" rx="6" ry="5" fill="#9ADBB9" stroke-width="1.2"/><ellipse cx="2" cy="-30" rx="6" ry="5" fill="#BFE8D5" stroke-width="1.2"/><ellipse cx="14" cy="-20" rx="6" ry="5" fill="#9ADBB9" stroke-width="1.2"/><path d="M-30-11h60" fill="none" stroke="#7656B5" stroke-width="3"/><circle cx="41" cy="-19" r="3" fill="#F7B9B0" stroke="none" opacity=".7"/></g>`;
+const hs=(x,y,s,t)=>sh(x,y,52*s)+hs0(x,y,s,t)+`<g ${tr(x,y,s)} ${S}>${t?'<rect x="22" y="-96" width="12" height="22" rx="2" fill="#C97362"/><rect x="20" y="-100" width="16" height="6" rx="2" fill="#B25F50"/><g fill="#fff" stroke="none" opacity=".8"><circle cx="30" cy="-110" r="6"/><circle cx="38" cy="-120" r="8"/><circle cx="48" cy="-132" r="9"/></g>':''}<rect x="12" y="-28" width="24" height="7" rx="2" fill="#A97B5A"/><circle cx="17" cy="-30" r="3" fill="#FF987F" stroke="none"/><circle cx="24" cy="-31" r="3" fill="#fff" stroke="none"/><circle cx="31" cy="-30" r="3" fill="#FF987F" stroke="none"/><path d="M24-44v16M16-36h16" fill="none" stroke-width="1.4"/><circle cx="5" cy="-12" r="1.8" fill="#7a5646" stroke="none"/><path d="M-44-58L0-94" fill="none" stroke="#fff" stroke-width="3" opacity=".35"/></g>`;
+const svg=g=>`<svg viewBox="0 0 400 240" aria-hidden="true" style="display:block;width:100%;height:auto"><defs><linearGradient id="sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF1C9"/><stop offset="1" stop-color="#DDF1DF"/></linearGradient><filter id="wc" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".03" numOctaves="2" seed="3" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="4"/></filter><filter id="gr"><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="2" seed="5"/><feColorMatrix values="0 0 0 0 .45 0 0 0 0 .35 0 0 0 0 .3 0 0 0 .5 0"/></filter></defs><rect width="400" height="240" fill="url(#sk)"/><circle cx="330" cy="40" r="60" fill="#FFF6C4" opacity=".7"/><g stroke="#FFF3B8" stroke-width="10" opacity=".35" stroke-linecap="round"><path d="M300 60L230 150M330 70L300 170M360 70L395 160"/></g><g fill="#fff" opacity=".8"><ellipse cx="70" cy="40" rx="30" ry="10"/><ellipse cx="95" cy="34" rx="22" ry="10"/><ellipse cx="230" cy="30" rx="28" ry="9"/><ellipse cx="252" cy="25" rx="18" ry="8"/></g><path d="M120 62q6-8 12 0q6-8 12 0M170 86q5-6 10 0q5-6 10 0" stroke="#7a5646" fill="none" stroke-width="1.6"/><path d="M0 150Q70 105 150 140T300 125T400 140V180H0Z" fill="#CFE8BF"/><path d="M0 160Q90 130 190 152T400 150V185H0Z" fill="#B7DDA6"/><g fill="#98C98A"><circle cx="30" cy="135" r="16"/><circle cx="52" cy="140" r="12"/><circle cx="345" cy="130" r="18"/><circle cx="372" cy="138" r="13"/><circle cx="170" cy="140" r="11"/></g><path d="M0 170Q100 150 200 165T400 160V240H0Z" fill="#A9D69A"/>${FL}<path d="M-10 240Q120 190 230 205T420 215V240Z" fill="#F1DDB0"/><g filter="url(#wc)">${g}</g>${FG}<rect width="400" height="240" fill="#fff" filter="url(#gr)" opacity=".35"/></svg>`;
+const SC=[[
+()=>tree(35,178,1.1)+hs(95,172,.8,1)+pig(180,205,.85,1,1)+pig(250,215,.95,1,1)+pig(325,225,1.05,1,1),
+()=>hs(95,185,1,0)+pig(170,228,.9,-1)+hs(300,185,1,1)+pig(362,228,.9,-1),
+()=>tree(45,178,1)+pig(150,228,1.1,1)+hs(270,190,1.4,2),
+()=>wolf(100,226,1.4,1,1)+wind(172,121)+`<g transform="rotate(8 280 188)">${hs(280,188,.95,0)}</g>`+pile(362,224,'#E0B955'),
+()=>wolf(75,226,1.3,1,1)+wind(138,128)+hs(265,190,1.3,2)+pig(320,232,.6,-1)+pig(350,234,.6,-1)+pig(380,232,.6,-1),
+()=>wolf(55,176,.4,-1)+hs(205,188,1.4,2)+pig(95,228,.9,1)+pig(325,228,.9,-1)+pig(372,232,.7,-1)+conf()
+],[
+()=>tree(45,178,1)+tree(365,176,.9)+hare(105,218,1.2,1)+tort(285,224,1.2,-1),
+()=>flag(60,205,1)+hare(140,218,1.1,1)+tort(235,224,1.1,1)+flag(350,190,.8),
+()=>tree(250,180,1.7)+hare(240,226,1.2,1,1)+tort(80,206,.6,1),
+()=>tree(40,178,1)+hare(110,228,1,1,1)+tort(255,226,1.2,1)+flag(365,192,.8),
+()=>flag(300,208,1.4)+tort(250,226,1.2,1)+hare(90,222,1,1)+conf()
+]];
+const STORIES=[
+{t:'Los tres cerditos',pages:[[0,['Tres cerditos salen de su casa.','Cada uno quiere hacer su casa.']],[1,['Uno hace su casa de paja.','Otro hace su casa de palos.']],[2,['El tercero hace su casa de ladrillos.','Es la casa más fuerte.']],[3,['Llega el lobo.','Sopla, sopla y sopla.','¡Las casas de paja y de palos caen!']],[4,['Los cerditos corren a la casa de ladrillos.','El lobo sopla, pero la casa no cae.']],[5,['El lobo se va muy lejos.','Los cerditos están felices.']]],
+q:[['___ cerditos salen de casa.','Tres',['Tres','Dos','Cinco'],'Son tres cerditos: uno, dos y tres.',0],['La casa más fuerte es de ___.','ladrillos',['ladrillos','paja','palos'],'La casa de ladrillos es dura. El lobo no pudo tirarla.',2],['El lobo ___ muy fuerte.','sopla',['sopla','canta','duerme'],'El lobo sopla muy fuerte para tirar las casas.',3],['Al final, los cerditos están ___.','felices',['felices','tristes','enojados'],'Están felices porque el lobo se fue lejos.',5]]},
+{t:'La liebre y la tortuga',pages:[[0,['La liebre corre muy rápido.','La tortuga camina muy despacio.']],[1,['La liebre dice: “¡Vamos a correr!”','La tortuga dice que sí.']],[2,['La liebre corre y corre.','Luego se duerme bajo un árbol.']],[3,['La tortuga no para.','Camina y camina.']],[4,['La tortuga llega a la meta.','¡La tortuga gana!']]],
+q:[['La ___ corre muy rápido.','liebre',['liebre','tortuga','rana'],'La liebre corre rápido. La tortuga camina despacio.',0],['La liebre se ___ bajo un árbol.','duerme',['duerme','baila','baña'],'La liebre se cansa y se duerme bajo el árbol.',2],['La tortuga llega a la ___.','meta',['meta','casa','luna'],'La meta es el lugar donde termina la carrera.',4],['¡Gana la ___!','tortuga',['tortuga','liebre','rana'],'La tortuga no paró, y por eso ganó la carrera.',4]]}
+];
+const PRAISE=['¡Muy bien!','¡Excelente!','¡Bravo!','¡Lo lograste!'];
+let cfg={fs:26,wide:false,focus:false,theme:'auto',open:false};
+try{Object.assign(cfg,JSON.parse(localStorage.getItem('cuentos-cfg2')||'{}'));cfg.open=false}catch(e){}
+const $=document.getElementById('app');
+let st={screen:'home'};
+const save=()=>{try{localStorage.setItem('cuentos-cfg2',JSON.stringify(cfg))}catch(e){}};
+function apply(){const r=document.documentElement;r.style.setProperty('--fs',cfg.fs+'px');r.style.setProperty('--ls',cfg.wide?'.08em':'.02em');r.style.setProperty('--lh',cfg.wide?'1.9':'1.6');if(cfg.theme==='auto')r.removeAttribute('data-theme');else r.setAttribute('data-theme',cfg.theme)}
+function say(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='es-ES';u.rate=.8;speechSynthesis.speak(u)}catch(e){}}
+const stop=()=>{try{speechSynthesis.cancel()}catch(e){}};
+const shuffle=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(x=>x[1]);
+function set(k,v){cfg[k]=v;save();apply();render()}
+function settings(){return `<div class="panel">
+<div class="row"><span>Tamaño de letra</span><span><button class="chip" onclick="set('fs',Math.max(20,cfg.fs-4))" aria-label="Letra más pequeña">A−</button> <button class="chip" onclick="set('fs',Math.min(38,cfg.fs+4))" aria-label="Letra más grande">A+</button></span></div>
+<div class="row"><span>Letras más separadas</span><button class="chip" aria-pressed="${cfg.wide}" onclick="set('wide',!cfg.wide)">${cfg.wide?'Sí':'No'}</button></div>
+<div class="row"><span>Una frase cada vez</span><button class="chip" aria-pressed="${cfg.focus}" onclick="set('focus',!cfg.focus)">${cfg.focus?'Sí':'No'}</button></div>
+<div class="row"><span>Colores</span><span><button class="chip" aria-pressed="${cfg.theme==='light'}" onclick="set('theme','light')">Claros</button> <button class="chip" aria-pressed="${cfg.theme==='dark'}" onclick="set('theme','dark')">Oscuros</button></span></div></div>`}
+const head=b=>`<div class="top">${b?`<button class="btn sq" onclick="go('home')" aria-label="Volver al inicio">←</button>`:'<span></span>'}<button class="btn sq" onclick="cfg.open=!cfg.open;render()" aria-label="Ajustes" aria-expanded="${cfg.open}">⚙️</button></div>${cfg.open?settings():''}`;
+function go(s,e){stop();st=Object.assign({screen:s,bad:[]},e||{});cfg.open=false;render();window.scrollTo(0,0)}
+function steps(s){const o=[];s.pages.forEach(p=>{if(cfg.focus)p[1].forEach(l=>o.push({n:p[0],l:[l]}));else o.push({n:p[0],l:p[1]})});return o}
+function render(){
+ if(st.screen==='home'){
+  $.innerHTML=head(false)+`<h1>¿Qué cuento quieres leer?</h1>`+STORIES.map((s,i)=>`<button class="story" onclick="go('read',{i:${i},n:0})"><span class="th">${svg(SC[i][0]())}</span><span><b>${s.t}</b><span>${s.pages.length} páginas y un juego</span></span></button>`).join('');
+ }else if(st.screen==='read'){
+  const s=STORIES[st.i],a=steps(s),p=a[st.n],last=st.n===a.length-1;
+  $.innerHTML=head(true)+`<div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="${a.length}" aria-valuenow="${st.n+1}"><i style="width:${(st.n+1)/a.length*100}%"></i></div>
+  <div class="pic">${svg(SC[st.i][p.n]())}<div class="cap"><div class="paper"><div class="txt">${p.l.map(l=>`<p>${l}</p>`).join('')}</div></div><button class="btn" onclick="sayR()">🔊 Escuchar</button></div></div>
+  
+  <div class="nav"><button class="btn" ${st.n===0?'disabled':''} onclick="go('read',{i:${st.i},n:${st.n-1}})">Atrás</button>
+  <button class="btn main" onclick="${last?`go('quiz',{i:${st.i},k:0,o:null,done:false,err:''})`:`go('read',{i:${st.i},n:${st.n+1}})`}">${last?'¡A jugar!':'Siguiente'}</button></div>`;
+ }else if(st.screen==='quiz'){
+  const s=STORIES[st.i],q=s.q[st.k];
+  if(!st.o)st.o=shuffle(q[2]);
+  const pt=q[0].split('___'),more=st.k+1<s.q.length;
+  $.innerHTML=head(true)+`<div class="bar" aria-hidden="true"><i style="width:${st.k/s.q.length*100}%"></i></div>
+  <div class="pic">${svg(SC[st.i][q[4]]())}<div class="cap"><div class="paper"><div class="txt"><p>${pt[0]}<span class="slot ${st.done?'ok':''}">${st.done?q[1]:'&nbsp;&nbsp;&nbsp;&nbsp;'}</span>${pt[1]}</p></div></div><button class="btn" onclick="sayQ()">🔊 Escuchar</button></div></div>
+  
+  <div class="opts">${st.o.map((w,j)=>{const b=st.bad.includes(w);return `<button class="btn ${st.done&&w===q[1]?'ok':''} ${b?'no':''}" ${st.done||b?'disabled':''} onclick="pick(${j})">${w}</button>`}).join('')}</div>
+  <div aria-live="polite">${st.done?`<p class="msg good">${PRAISE[st.k%4]} ⭐</p>`:st.err?`<p class="msg soft">${st.err}</p>`:''}</div>
+  ${st.done?`<button class="btn main" onclick="${more?`go('quiz',{i:${st.i},k:${st.k+1},o:null,done:false,err:''})`:`go('end',{i:${st.i}})`}">${more?'Siguiente pregunta':'Terminar'}</button>`:''}`;
+ }else{
+  const s=STORIES[st.i];
+  $.innerHTML=head(false)+`<div class="page"><h1>¡Felicidades!</h1><div class="stars" aria-label="${s.q.length} estrellas">${'⭐'.repeat(s.q.length)}</div><p class="txt" style="font-size:22px">Leíste “${s.t}” y completaste todo el juego. ¡Lo hiciste muy bien!</p></div>
+  <button class="btn main" onclick="go('read',{i:${st.i},n:0})">Leer otra vez</button><button class="btn" onclick="go('home')">Elegir otro cuento</button>`;
+ }
+}
+function sayR(){const p=steps(STORIES[st.i])[st.n];say(p.l.join(' '))}
+function sayQ(){const q=STORIES[st.i].q[st.k];say(q[0].replace('___',st.done?q[1]:'…'))}
+function pick(j){const q=STORIES[st.i].q[st.k],w=st.o[j];if(w===q[1]){st.done=true;st.err='';say(PRAISE[st.k%4])}else{st.bad.push(w);st.err='¡Casi! '+q[3]+' Prueba otra vez.';say(q[3])}render()}
+apply();render();
+</script></body></html>
